@@ -167,6 +167,22 @@ AdminSection::registerModel(Color::class, function (ModelConfiguration $model) {
     });
     // Create And Edit
     $model->onCreateAndEdit(function() {
+	
+	$locales = ['en', 'ru'];
+	$tabs = AdminDisplay::tabbed();
+
+	$tabs->setTabs(function () use ($locales) {
+	    $tabs = array();
+	    foreach ($locales as $lang) {
+		$tabs[] = AdminDisplay::tab(AdminForm::elements([
+
+				    AdminFormElement::text("title_$lang", "Title [$lang]")->required()
+			
+			]))->setLabel($lang);
+	    }
+
+	    return $tabs;
+	});
 
 	$form = AdminForm::form()->setElements([
 	    
@@ -174,7 +190,7 @@ AdminSection::registerModel(Color::class, function (ModelConfiguration $model) {
 		    AdminFormElement::text('color', 'Color'),
 		    AdminFormElement::image('image', 'Image')
 	    
-		]);
+		])->addElement($tabs);
 
 	$form->getButtons()
 		->setSaveButtonText('Save Color')

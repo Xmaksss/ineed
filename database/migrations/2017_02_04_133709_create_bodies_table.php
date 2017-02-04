@@ -15,7 +15,7 @@ class CreateBodiesTable extends Migration
     {
         Schema::create('bodies', function (Blueprint $table) {
             $table->increments('id');
-	    $table->integer('order')->default(0);
+	    $table->integer('order')->nullable();
 	    $table->string('title_en');
 	    $table->string('title_ru');
 	    $table->timestamps();

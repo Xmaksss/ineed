@@ -15,8 +15,8 @@ class CreateBordersTable extends Migration
     {
         Schema::create('borders', function (Blueprint $table) {
             $table->increments('id');
-	    $table->integer('body_id')->default(null);
-	    $table->integer('order')->default(0);
+	    $table->integer('body_id')->nullable();
+	    $table->integer('order')->nullable();
 	    $table->string('color');
 	    $table->timestamps();
 	});

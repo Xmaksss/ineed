@@ -15,8 +15,8 @@ class CreateTypesTable extends Migration
     {
         Schema::create('types', function (Blueprint $table) {
             $table->increments('id');
-	    $table->integer('material_id')->default(null);
-	    $table->integer('order')->default(0);
+	    $table->integer('material_id')->nullable();
+	    $table->integer('order')->default(0)->nullable();
 	    
 	    $table->string('title_en');
 	    $table->string('title_ru');

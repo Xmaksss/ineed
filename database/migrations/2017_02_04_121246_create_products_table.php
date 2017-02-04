@@ -18,7 +18,7 @@ class CreateProductsTable extends Migration
             $table->integer('category_id');
             $table->string('slug');
             $table->integer('price');
-            $table->integer('price_new')->default(0);
+            $table->integer('price_new')->nullable();
             $table->tinyInteger('public')->default(0);
 	    
             $table->string('image_main');
@@ -31,10 +31,10 @@ class CreateProductsTable extends Migration
 	    
 	    $table->integer('size_id');
 	    $table->integer('material_id');
-	    $table->integer('type_id')->default(0);
+	    $table->integer('type_id')->nullable();
 	    $table->integer('color_id');
 	    $table->integer('body_id');
-	    $table->integer('border_id')->default(0);
+	    $table->integer('border_id')->nullable();
 
 	    $table->string('title_en');
 	    $table->text('description_en');

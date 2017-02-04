@@ -15,10 +15,13 @@ class CreateColorsTable extends Migration
     {
         Schema::create('colors', function (Blueprint $table) {
             $table->increments('id');
-	    $table->integer('order')->default(0);
+	    $table->integer('order')->default(0)->nullable();
 	    
-	    $table->string('color')->default(null);
+	    $table->string('color')->nullable();
 	    $table->string('image');
+	    
+	    $table->string('title_en');
+	    $table->string('title_ru');
 	    $table->timestamps();
 	});
     }
