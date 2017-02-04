@@ -1,6 +1,13 @@
 <?php
 
 use App\Product;
+use App\Size;
+use App\Material;
+use App\Type;
+use App\Color;
+use App\Body;
+use App\Border;
+
 use App\CategoryDescription;
 use SleepingOwl\Admin\Model\ModelConfiguration;
 
@@ -47,6 +54,20 @@ AdminSection::registerModel(Product::class, function (ModelConfiguration $model)
 				AdminFormElement::image('image_5', 'Image 5'),
 				AdminFormElement::image('image_6', 'Image 6'),
 		    ]))->setLabel('Images');
+	    
+	    $tabs[] = AdminDisplay::tab(AdminForm::elements([
+				AdminFormElement::select('size_id', 'Size', Size::pluck('title_en', 'id')->all())->required(),
+		
+				AdminFormElement::select('material_id', 'Material', Material::pluck('title_en', 'id')->all())
+				    ->required(),
+		
+				AdminFormElement::dependentselect('type_id', 'Type')
+					->setModelForOptions(Type::class, 'title_en')
+					->setDataDepends(['material_id'])
+					->setLoadOptionsQueryPreparer(function($item, $query) {
+					    return $query->where('id', $item->getDependValue('material_id'));
+					})
+		    ]))->setLabel('Options');
 
 	    return $tabs;
 	});
@@ -61,7 +82,7 @@ AdminSection::registerModel(Product::class, function (ModelConfiguration $model)
 		])->addElement($tabs);
 	;
 	$form->getButtons()
-		->setSaveButtonText('Save category')
+		->setSaveButtonText('Save Product')
 		->hideSaveAndCloseButton();
 	return $form;
     });

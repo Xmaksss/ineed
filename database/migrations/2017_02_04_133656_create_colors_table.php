@@ -17,7 +17,8 @@ class CreateColorsTable extends Migration
             $table->increments('id');
 	    $table->integer('order')->default(0);
 	    
-	    $table->string('color');
+	    $table->string('color')->default(null);
+	    $table->string('image');
 	    $table->timestamps();
 	});
     }

@@ -1,7 +1,6 @@
 <?php
 
 use App\Category;
-use App\CategoryDescription;
 use SleepingOwl\Admin\Model\ModelConfiguration;
 
 AdminSection::registerModel(Category::class, function (ModelConfiguration $model) {
@@ -31,7 +30,7 @@ AdminSection::registerModel(Category::class, function (ModelConfiguration $model
 	    $tabs = array();
 	    foreach ($locales as $lang) {
 		$tabs[] = AdminDisplay::tab(AdminForm::elements([
-				    AdminFormElement::text("title_$lang", "Title [$lang]")->required(),
+				    AdminFormElement::text("title_$lang", "Title [$lang]")->required()
 			]))->setLabel($lang);
 	    }
 	    
@@ -40,10 +39,10 @@ AdminSection::registerModel(Category::class, function (ModelConfiguration $model
 
 	$form = AdminForm::form()->setElements([
 
-		    AdminFormElement::number('sort', 'Sort Order'),
-		    AdminFormElement::checkbox('public', 'Published'),
+		    AdminFormElement::number('sort', 'Sort Order')->setDefaultValue(0),
+		    AdminFormElement::checkbox('public', 'Published')
 		])->addElement($tabs);
-	;
+	
 	$form->getButtons()
 		->setSaveButtonText('Save category')
 		->hideSaveAndCloseButton();
