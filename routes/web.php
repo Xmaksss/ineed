@@ -18,3 +18,18 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
+
+Route::group(['prefix' => 'filter'], function () {
+    Route::get('categories', [
+	'uses' => 'FilterController@getCategories'
+    ]);
+    Route::get('sizes', [
+	'uses' => 'FilterController@getSizes'
+    ]);
+    Route::get('materials', [
+	'uses' => 'FilterController@getMaterials'
+    ]);
+    Route::get('types', [
+	'uses' => 'FilterController@getTypes'
+    ]);
+});
