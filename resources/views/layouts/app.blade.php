@@ -87,6 +87,7 @@
 	    </li>
 	    @endforeach
 	</ul>
+	<p>Current Locale: {{LaravelLocalization::getCurrentLocale()}}</p>
 	
         @yield('content')
     </div>
