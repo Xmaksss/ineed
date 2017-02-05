@@ -18,8 +18,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:api');
 
 Route::group(['prefix' => 'filter'], function () {
-    Route::post('categories', [
-	'uses' => 'FilterController@getCategories'
+    Route::post('category', [
+	'uses' => 'FilterController@getCategory'
     ]);
     Route::post('sizes', [
 	'uses' => 'FilterController@getSizes'

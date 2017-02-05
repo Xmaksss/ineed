@@ -1,314 +1,174 @@
-@extends('layouts.app')
+@extends('layouts.master')
+
+@section('title')
+    Home
+@endsection
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-12" id="filter">
-			<a href="#" v-for="cat in categories" v-on:click.prevent="getOptions(cat.id)">@{{cat.title}}</a>
 
-            <select id="size" v-model="size" v-if="sizes.length > 0" v-on:change="getMaterials">
-				<option v-bind:value="size.id" v-for="size in sizes">@{{size.title}}</option>
-			</select>
-			<select id="material" v-model="material" v-if="materials.length > 0" v-on:change="getTypes">
-				<option v-bind:value="material.id" v-for="material in materials">@{{material.title}}</option>
-			</select>
-			<select id="type" v-model="type" v-if="types.length > 0" v-on:change="getColors">
-				<option v-bind:value="type.id" v-for="type in types">@{{type.title}}</option>
-			</select>
+@include('includes.slider')
+<main class="main-content">
+    <header class="main-content__header">
+	<div class="content-header__current_wrap">
+	    <p class="content-header__current">@{{categoryTitle}}</p>
+	</div>
+	<div class="content-header__select_wrap">
+	    <ul class="content__select_lists">
+		<li class="select__list_head" v-if="sizes.length > 0">Select a size: 
+		    <select class="select__list_selects"v-model="size" v-on:change="getMaterials">
+			<option class="list__selects_option" v-bind:value="size.id" v-for="size in sizes">@{{size.title}}</option>
+		    </select>
+		</li>
+		<li class="select__list_head" v-if="materials.length > 0">Select a material:
+		    <select class="select__list_selects" v-model="material" v-on:change="getTypes">
+			<option class="form__input_option" v-bind:value="material.id" v-for="material in materials">@{{material.title}}</option>
+		    </select>
+		</li>
+		<li class="select__list_head" v-if="types.length > 0">Select a type:
+		    <select class="select__list_selects" v-model="type" v-on:change="getColors">
+			<option class="form__input_option" v-bind:value="type.id" v-for="type in types">@{{type.title}}</option>
+		    </select>
+		</li>
+	    </ul>
+	</div>
+    </header>
 
-			<div class="colors">
-				<div class="color" v-for="item in colors" v-bind:class="{ active: color == item.id}" v-on:click="getBodies(item.id)">
-					<div v-if="item.color != ''" v-bind:style="{ background: item.color}"></div>
-					<div v-if="item.color == '' && item.image != ''" v-bind:style="{ backgroundImage: 'url(/' + item.image + ')'}"></div>
-					<div v-if="item.color == '' && item.image == ''" style="background: linear-gradient(-45deg, #ddd 50%, #333 50%)"></div>
-				</div>
-			</div>
+    <div class="main-content__item_wrap" v-show="show" style="display: none">
+	<div class="content__item_images">
+	    <div class="content__images_general">
+		<img class="content__general_image" src="/@{{product.image_main}}" v-bind:alt="product.title">
+	    </div>
+	    <ul class="content__images_list">
+		<li class="content__list_image" v-if="product.image_1 != ''">
+		    <img class="content__images_image" src="/@{{product.image_1}}" v-bind:alt="product.title">
+		</li>
+		<li class="content__list_image" v-if="product.image_2 != ''">
+		    <img class="content__images_image" src="/@{{product.image_2}}" v-bind:alt="product.title">
+		</li>
+		<li class="content__list_image" v-if="product.image_3 != ''">
+		    <img class="content__images_image" src="/@{{product.image_3}}" v-bind:alt="product.title">
+		</li>
+		<li class="content__list_image" v-if="product.image_4 != ''">
+		    <img class="content__images_image" src="/@{{product.image_4}}" v-bind:alt="product.title">
+		</li>
+		<li class="content__list_image" v-if="product.image_5 != ''">
+		    <img class="content__images_image" src="/@{{product.image_5}}" v-bind:alt="product.title">
+		</li>
+		<li class="content__list_image" v-if="product.image_6 != ''">
+		    <img class="content__images_image" src="/@{{product.image_6}}" v-bind:alt="product.title">
+		</li>
+	    </ul>
+	</div>
 
-			<a href="#" v-for="body in bodies" v-on:click.prevent="getBorders(body.id)">@{{body.title}}</a>
+	<div class="content__item_info">
+	    <h3 class="item__info_title">@{{product.title}}</h3>
+	    <p class="item__info_text">@{{product.description}}</p>
+	    <div class="item__info_social">
+		<ul class="info__social_list">
+		    <li class="info__social_icon icon_s_g"></li>
+		    <li class="info__social_icon icon_fb"></li>
+		    <li class="info__social_icon icon_s_youtube"></li>
+		    <li class="info__social_icon icon_s_insta"></li>
+		</ul>
+	    </div>
 
-			<div class="borders">
-				<div class="border" v-for="item in borders" v-bind:class="{ active: border == item.id}" v-on:click="getProduct(item.id)">
-					<div v-if="item.color != ''" v-bind:style="{ background: item.color}"></div>
-					<div v-else style="background: linear-gradient(-45deg, #ddd 50%, #333 50%)"></div>
-				</div>
-			</div>
+	    <div class="item__info_price" v-if="product.price_new != undefined">
+		<p class="info__price_old" v-if="product.price_new"><s>$@{{product.price}}</s></p>
+		<p class="info__price_current">$@{{product.price_new}}</p>
+	    </div>
+	    
+	    <div class="item__info_price" v-if="product.price_new == undefined">
+		<p class="info__price_current">$@{{product.price}}</p>
+	    </div>
 
-        </div>
+	    <div class="content__item_select">
+		<div class="item__select_color">
+		    <p class="select__color_text">Select a color</p>
+		    <ul class="select__color_lists">
+			<li class="select__color_list" v-for="item in colors" v-bind:class="{ active: color == item.id}" v-on:click="getBodies(item.id)">
+			    <div v-if="item.color != ''" v-bind:style="{ background: item.color}"></div>
+			    <div v-if="item.color == '' && item.image != ''" v-bind:style="{ backgroundImage: 'url(/' + item.image + ')'}"></div>
+			    <div v-if="item.color == '' && item.image == ''" style="background: linear-gradient(-45deg, #ddd 50%, #333 50%)"></div>
+			</li>
+		    </ul>
+		</div>
+
+		<div class="item__select_type">
+		    <ul class="select__type_lists">
+			<li class="select__type_list" v-for="body in bodies">
+			    <label v-on:click="getBorders(body.id)">@{{body.title}}</label>
+			</li>
+		    </ul>
+		</div>
+		
+		<div class="borders">
+		    <div class="border" v-for="item in borders" v-bind:class="{ active: border == item.id}" v-on:click="getProduct(item.id)">
+			<div v-if="item.color != ''" v-bind:style="{ background: item.color}"></div>
+			<div v-else style="background: linear-gradient(-45deg, #ddd 50%, #333 50%)"></div>
+		    </div>
+		</div>
+
+		<div class="item__add-cart">
+		    <div class="item__add-cart_wrap">
+			<a href="#0" class="item__add-cart_minus" v-on:click.prevent="quantityDec">-</a>
+		    </div>
+		    <div class="item__add-cart_wrap">
+			<p class="item__add-cart_number">@{{quantity}}</p>
+		    </div>
+		    <a href="#0" class="item__add-cart_plus" v-on:click.prevent="quantityInc">+</a>
+		    <a href="#0" class="item__add-cart_btn" v-on:click="addToCart">Add to Cart</a>
+		</div>
+	    </div>
+
+	</div>
+
+	<div class="item__other-products_wrap">
+
+	    <h3 class="item__other-products_title">Other products</h3>
+	    <div class="other-products__item">
+		<h3 class="other-products__item_title">Python MacBook</h3>
+		<a href="#0" class="other-products__item_link">Select</a>
+		<p class="other-products__item_price">From $150</p>
+	    </div>
+	    <div class="other-products__item">
+		<h3 class="other-products__item_title">Python Iphone 4S</h3>
+		<a href="#0" class="other-products__item_link">Select</a>
+		<p class="other-products__item_price">From $50</p>
+	    </div>
+	    <div class="other-products__item">
+		<h3 class="other-products__item_title">Python Iwatch</h3>
+		<a href="#0" class="other-products__item_link">Select</a>
+		<p class="other-products__item_price">From $20</p>
+	    </div>
+	</div>
     </div>
-</div>
+</main>
 <style>
-	.colors .color {
-		display: inline-block;
-		width: 50px;
-		height: 50px;
-		box-shadow: 0px 0px 15px grey;
-	}
-	.colors .color.active {
-		box-shadow: 0px 0px 15px brown;
-		border-radius: 8px;
-	}
-	.colors .color div {
-		width: 100%;
-		height: 100%;
-	}
-
-	.borders .border {
-		display: inline-block;
-		width: 30px;
-		height: 30px;
-		box-shadow: 0px 0px 15px grey;
-	}
-	.borders .border.active {
-		box-shadow: 0px 0px 15px brown;
-		border-radius: 5px;
-	}
-	.borders .border div {
-		width: 100%;
-		height: 100%;
-	}
+    .select__color_list {
+	border-radius: 50%;
+	overflow: hidden;
+	margin-right: 4px;
+    }
+    .select__color_list div {
+	width: 100%;
+	height: 100%;
+    }
+    .select__color_list.active {
+	box-shadow: 0 0 10px grey;
+    }
+    .borders .border {
+	display: inline-block;
+	width: 30px;
+	height: 30px;
+	box-shadow: 0px 0px 15px grey;
+    }
+    .borders .border.active {
+	box-shadow: 0px 0px 15px brown;
+	border-radius: 5px;
+    }
+    .borders .border div {
+	width: 100%;
+	height: 100%;
+    }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.28/vue.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.1.2/vue-resource.min.js"></script>
-<script>
-
-    Vue.http.headers.common['X-CSRF-TOKEN'] = Laravel.csrfToken;
-
-    var Filter = new Vue({
-	el: '#filter',
-	data: {
-
-		lang: '{{LaravelLocalization::getCurrentLocale()}}',
-		categories: [],
-	    sizes: [],
-	    materials: [],
-	    types: [],
-	    colors: [],
-	    bodies: [],
-	    borders: [],
-
-		category: undefined,
-
-		size: undefined,
-		material: undefined,
-		type: undefined,
-		body: undefined,
-		border: undefined
-	},
-	ready: function() {
-		var self = this;
-
-		this.$http.post('/api/filter/categories').then(function (response) {
-
-			self.$set('categories', response.data);
-
-        });
-	},
-	methods: {
-		getOptions: function(cat_id) {
-			var self = this;
-
-			this.$set('sizes', []);
-			this.$set('size', undefined);
-			this.$set('materials', []);
-			this.$set('material', undefined);
-			this.$set('types', []);
-			this.$set('type', undefined);
-			this.$set('colors', []);
-			this.$set('color', undefined);
-			this.$set('bodies', []);
-			this.$set('body', undefined);
-			this.$set('borders', []);
-			this.$set('border', undefined);
-
-			this.category = cat_id;
-			var data = {
-				cat_id: this.category
-			}
-
-			this.$http.post('/api/filter/sizes', data).then(function (response) {
-				console.log(response.data);
-				self.$set('sizes', response.data);
-				if(response.data.length > 0) {
-					self.$set('size', response.data[0].id);
-					self.getMaterials();
-				}
-
-			});
-		},
-		getMaterials: function() {
-			var self = this;
-
-			this.$set('materials', []);
-			this.$set('material', undefined);
-			this.$set('types', []);
-			this.$set('type', undefined);
-			this.$set('colors', []);
-			this.$set('color', undefined);
-			this.$set('bodies', []);
-			this.$set('body', undefined);
-			this.$set('borders', []);
-			this.$set('border', undefined);
-
-			var data = {
-				cat_id: this.category,
-				size_id: this.size
-			}
-
-			this.$http.post('/api/filter/materials', data).then(function (response) {
-				console.log(response.data);
-				self.$set('materials', response.data);
-				if(response.data.length > 0) {
-					self.$set('material', response.data[0].id);
-					self.getTypes();
-				}
-
-			});
-		},
-		getTypes: function() {
-			var self = this;
-
-			this.$set('types', []);
-			this.$set('type', undefined);
-			this.$set('colors', []);
-			this.$set('color', undefined);
-			this.$set('bodies', []);
-			this.$set('body', undefined);
-			this.$set('borders', []);
-			this.$set('border', undefined);
-
-			var data = {
-				cat_id: this.category,
-				size_id: this.size,
-				material_id: this.material
-			}
-
-			this.$http.post('/api/filter/types', data).then(function (response) {
-				console.log(response.data);
-
-				if (response.data.color) {
-					self.$set('type', 0);
-					self.getColors();
-				} else {
-					self.$set('types', response.data.types);
-					if(response.data.types.length > 0) {
-						self.$set('type', response.data.types[0].id);
-						self.getColors();
-					}
-				}
-
-			});
-		},
-		getColors: function() {
-			var self = this;
-
-			this.$set('colors', []);
-			this.$set('color', undefined);
-			this.$set('bodies', []);
-			this.$set('body', undefined);
-			this.$set('borders', []);
-			this.$set('border', undefined);
-			
-
-			var data = {
-				cat_id: this.category,
-				size_id: this.size,
-				material_id: this.material,
-				type_id: this.type
-			}
-
-			this.$http.post('/api/filter/colors', data).then(function (response) {
-				console.log(response.data);
-				console.log(response.data.length);
-
-				self.$set('colors', response.data);
-				if(response.data.length > 0) {
-					self.$set('color', response.data[0].id);
-					self.getBodies(self.color);
-				}
-			});
-		},
-		getBodies: function(colorID) {
-			var self = this;
-
-			this.$set('color', colorID);
-
-			this.$set('bodies', []);
-			this.$set('body', undefined);
-			this.$set('borders', []);
-			this.$set('border', undefined);
-
-			var data = {
-				cat_id: this.category,
-				size_id: this.size,
-				material_id: this.material,
-				type_id: this.type,
-				color_id: this.color
-			}
-
-			this.$http.post('/api/filter/bodies', data).then(function (response) {
-				console.log(response.data);
-
-				self.$set('bodies', response.data);
-				if(response.data.length > 0) {
-					self.$set('body', response.data[0].id);
-					self.getBorders(self.body);
-				}
-
-			});
-		},
-		getBorders: function(bodyID) {
-			var self = this;
-
-			this.$set('body', bodyID);
-			this.$set('borders', []);
-
-			var data = {
-				cat_id: this.category,
-				size_id: this.size,
-				material_id: this.material,
-				type_id: this.type,
-				color_id: this.color,
-				body_id: this.body
-			}
-
-			this.$http.post('/api/filter/borders', data).then(function (response) {
-				console.log(response.data);
-
-				if (response.data.product) {
-					self.$set('border', 0);
-					self.getProduct();
-				} else {
-					self.$set('borders', response.data.borders);
-					if(response.data.borders.length > 0) {
-						self.$set('border', response.data.borders[0].id);
-						self.getProduct();
-					}
-				}
-
-			});
-		},
-		getProduct: function(borderID) {
-
-			this.$set('border', borderID);
-			
-			var data = {
-				cat_id: this.category,
-				size_id: this.size,
-				material_id: this.material,
-				type_id: this.type,
-				color_id: this.color,
-				body_id: this.body,
-				border_id: this.border
-			}
-
-			this.$http.post('/api/filter/product', data).then(function (response) {
-
-				console.log(response.data);
-
-
-			});
-		}
-	}
-    });
-</script>
 @endsection

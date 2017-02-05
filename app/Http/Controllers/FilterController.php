@@ -12,13 +12,16 @@ class FilterController extends Controller {
     
     private $lang = 'en';
 
-    public function getCategories() {
+    public function getCategory(Request $request) {
 	
-	\Config::set('app.locale',  LaravelLocalization::getNonLocalizedURL() ); 
+	$cat_id = $request['cat_id'];
 
-	$data = DB::table('categories')->select('id', 'title_' .  $this->lang . ' as title')->orderBy('sort')->get();
+	$cat = DB::table('categories')
+		->select('id', 'title_' .  $this->lang . ' as title')
+		->where('id', $cat_id)
+		->first();
 
-	return response()->json($data);
+	return response()->json($cat);
     }
 
     public function getSizes(Request $request) {
