@@ -11,11 +11,24 @@
 |
 */
 
-Route::get('/', function () {
+/*Route::get('/', function () {
     return view('welcome');
-});
+});*/
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index');
+//Route::get('/home', 'HomeController@index');
 
+Route::group(
+	[
+	    'prefix' => LaravelLocalization::setLocale(),
+	    'middleware' => [ 'localeSessionRedirect', 'localizationRedirect']
+	], function() {
+    /** ADD ALL LOCALIZED ROUTES INSIDE THIS GROUP * */
+    Route::get('/', function() {
+	return view('welcome');
+    });
+
+    Route::get('home', 'HomeController@index');
+    
+});
