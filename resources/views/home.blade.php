@@ -4,16 +4,16 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12" id="filter">
-			<a href="#" v-for="cat in categories" v-on:click.prevent="getOptions(cat.id)">@{{cat.title_en}}</a>
+			<a href="#" v-for="cat in categories" v-on:click.prevent="getOptions(cat.id)">@{{cat.title}}</a>
 
             <select id="size" v-model="size" v-if="sizes.length > 0" v-on:change="getMaterials">
-				<option v-bind:value="size.id" v-for="size in sizes">@{{size.title_en}}</option>
+				<option v-bind:value="size.id" v-for="size in sizes">@{{size.title}}</option>
 			</select>
 			<select id="material" v-model="material" v-if="materials.length > 0" v-on:change="getTypes">
-				<option v-bind:value="material.id" v-for="material in materials">@{{material.title_en}}</option>
+				<option v-bind:value="material.id" v-for="material in materials">@{{material.title}}</option>
 			</select>
 			<select id="type" v-model="type" v-if="types.length > 0" v-on:change="getColors">
-				<option v-bind:value="type.id" v-for="type in types">@{{type.title_en}}</option>
+				<option v-bind:value="type.id" v-for="type in types">@{{type.title}}</option>
 			</select>
 
 			<div class="colors">
@@ -24,7 +24,7 @@
 				</div>
 			</div>
 
-			<a href="#" v-for="body in bodies" v-on:click.prevent="getBorders(body.id)">@{{body.title_en}}</a>
+			<a href="#" v-for="body in bodies" v-on:click.prevent="getBorders(body.id)">@{{body.title}}</a>
 
 			<div class="borders">
 				<div class="border" v-for="item in borders" v-bind:class="{ active: border == item.id}" v-on:click="getProduct(item.id)">
@@ -76,6 +76,8 @@
     var Filter = new Vue({
 	el: '#filter',
 	data: {
+
+		lang: '{{LaravelLocalization::getCurrentLocale()}}',
 		categories: [],
 	    sizes: [],
 	    materials: [],

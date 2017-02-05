@@ -38,44 +38,49 @@ return [
 	return \App\User::count();
     }, ['class' => 'label-success']),
 	    (new Page(\App\Category::class))
-	    ->setIcon('fa fa-newspaper-o')
+	    ->setIcon('fa fa-archive')
 	    ->setPriority(400)->addBadge(function () {
 	return \App\Category::count();
     }),
 	    (new Page(\App\Product::class))
-	    ->setIcon('fa fa-newspaper-o')
+	    ->setIcon('fa fa-suitcase')
 	    ->setPriority(500)->addBadge(function () {
 	return \App\Product::count();
     }),
     [
 	'title' => 'Options',
-	'icon' => 'fa fa-group',
+	'icon' => 'fa fa-folder',
 	'priority' => 600,
 	'pages' => [
 		    (new Page(\App\Size::class))
-		    ->setIcon('fa fa-group')
+		    ->setIcon('fa fa-minus')
 		    ->setPriority(0),
 		    (new Page(\App\Material::class))
-		    ->setIcon('fa fa-group')
+		    ->setIcon('fa fa-minus')
 		    ->setPriority(100)
 		    ->setPriority(0),
 		    (new Page(\App\Type::class))
-		    ->setIcon('fa fa-group')
+		    ->setIcon('fa fa-minus')
 		    ->setPriority(200)
 		    ->setPriority(0),
 		    (new Page(\App\Color::class))
-		    ->setIcon('fa fa-group')
+		    ->setIcon('fa fa-minus')
 		    ->setPriority(300)
 		    ->setPriority(0),
 		    (new Page(\App\Body::class))
-		    ->setIcon('fa fa-group')
+		    ->setIcon('fa fa-minus')
 		    ->setPriority(400)
 		    ->setPriority(0),
 		    (new Page(\App\Border::class))
-		    ->setIcon('fa fa-group')
+		    ->setIcon('fa fa-minus')
 		    ->setPriority(500)
 	]
-    ]
+    ],
+	    (new Page(\App\Slider::class))
+	    ->setIcon('fa fa-picture-o')
+	    ->setPriority(700)->addBadge(function () {
+	return \App\Slider::count();
+    })
 	// Examples
 	// [
 	//    'title' => 'Content',

@@ -6,11 +6,17 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use DB;
 
+use LaravelLocalization;
+
 class FilterController extends Controller {
     
-    public function getCategories() {
+    private $lang = 'en';
 
-	$data = DB::table('categories')->select('id', 'title_en')->orderBy('sort')->get();
+    public function getCategories() {
+	
+	\Config::set('app.locale',  LaravelLocalization::getNonLocalizedURL() ); 
+
+	$data = DB::table('categories')->select('id', 'title_' .  $this->lang . ' as title')->orderBy('sort')->get();
 
 	return response()->json($data);
     }
@@ -19,7 +25,7 @@ class FilterController extends Controller {
 	$cat_id = $request['cat_id'];
 	
 	$data = DB::table('sizes')
-		->select('sizes.id','sizes.title_en')
+		->select('sizes.id','sizes.title_' . $this->lang . ' as title')
 		->leftJoin('products', 'sizes.id', '=', 'products.size_id')
 		->where('products.category_id', $cat_id)
 		->orderBy('sizes.order')
@@ -34,7 +40,7 @@ class FilterController extends Controller {
 	$size_id = $request['size_id'];
 
 	$data = DB::table('materials')
-		->select('materials.id', 'materials.title_en')
+		->select('materials.id', 'materials.title_' . $this->lang . ' as title')
 		->leftJoin('products', 'materials.id', '=', 'products.material_id')
 		->where('products.category_id', $cat_id)
 		->where('products.size_id', $size_id)
@@ -47,7 +53,7 @@ class FilterController extends Controller {
     
     public function getTypes(Request $request) {
 	$data = array();
-	
+	$data['lang'] = LaravelLocalization::getCurrentLocale();
 	$cat_id = $request['cat_id'];
 	$size_id = $request['size_id'];
 	$material_id = $request['material_id'];
@@ -59,7 +65,7 @@ class FilterController extends Controller {
 	if($types_count > 0) {
 	    $data['color'] = false;
 	    $data['types'] = DB::table('types')
-		    ->select('types.id', 'types.title_en')
+		    ->select('types.id', 'types.title_' . $this->lang . ' as title')
 		    ->leftJoin('products', 'types.id', '=', 'products.type_id')
 		    ->where('products.category_id', $cat_id)
 		    ->where('products.size_id', $size_id)
@@ -82,7 +88,7 @@ class FilterController extends Controller {
 	
 	if($type_id == 0 || empty($type_id)) {
 	    $data = DB::table('colors')
-		    ->select('colors.id', 'colors.title_en', 'colors.color', 'colors.image')
+		    ->select('colors.id', 'colors.title_' . $this->lang . ' as title', 'colors.color', 'colors.image')
 		    ->leftJoin('products', 'colors.id', '=', 'products.color_id')
 		    ->where('products.category_id', $cat_id)
 		    ->where('products.size_id', $size_id)
@@ -92,7 +98,7 @@ class FilterController extends Controller {
 		    ->get();
 	} else {
 	    $data = DB::table('colors')
-		    ->select('colors.id', 'colors.title_en', 'colors.color', 'colors.image')
+		    ->select('colors.id', 'colors.title_' . $this->lang . ' as title', 'colors.color', 'colors.image')
 		    ->leftJoin('products', 'colors.id', '=', 'products.color_id')
 		    ->where('products.category_id', $cat_id)
 		    ->where('products.size_id', $size_id)
@@ -115,7 +121,7 @@ class FilterController extends Controller {
 
 	if ($type_id == 0 || empty($type_id)) {
 	    $data = DB::table('bodies')
-		    ->select('bodies.id', 'bodies.title_en')
+		    ->select('bodies.id', 'bodies.title_' . $this->lang . ' as title')
 		    ->leftJoin('products', 'bodies.id', '=', 'products.body_id')
 		    ->where('products.category_id', $cat_id)
 		    ->where('products.size_id', $size_id)
@@ -126,7 +132,7 @@ class FilterController extends Controller {
 		    ->get();
 	} else {
 	    $data = DB::table('bodies')
-		    ->select('bodies.id', 'bodies.title_en')
+		    ->select('bodies.id', 'bodies.title_' . $this->lang . ' as title')
 		    ->leftJoin('products', 'bodies.id', '=', 'products.body_id')
 		    ->where('products.category_id', $cat_id)
 		    ->where('products.size_id', $size_id)
@@ -204,6 +210,7 @@ class FilterController extends Controller {
 	if ($type_id == 0 || empty($type_id)) {
 	    if ($border_id == 0 || empty($border_id)) {
 		$data = DB::table('products')
+			->select('*', 'title_' . $this->lang . ' as title',  'description_' . $this->lang . ' as description')
 			->where('products.category_id', $cat_id)
 			->where('products.size_id', $size_id)
 			->where('products.material_id', $material_id)
@@ -212,6 +219,7 @@ class FilterController extends Controller {
 			->first();
 	    } else {
 		$data = DB::table('products')
+			->select('*', 'title_' . $this->lang . ' as title', 'description_' . $this->lang . ' as description')
 			->where('products.category_id', $cat_id)
 			->where('products.size_id', $size_id)
 			->where('products.material_id', $material_id)
@@ -224,6 +232,7 @@ class FilterController extends Controller {
 	} else {
 	    if ($border_id == 0 || empty($border_id)) {
 		$data = DB::table('products')
+			->select('*', 'title_' . $this->lang . ' as title', 'description_' . $this->lang . ' as description')
 			->where('products.category_id', $cat_id)
 			->where('products.size_id', $size_id)
 			->where('products.material_id', $material_id)
@@ -233,6 +242,7 @@ class FilterController extends Controller {
 			->first();
 	    } else {
 		$data = DB::table('products')
+			->select('*', 'title_' . $this->lang . ' as title', 'description_' . $this->lang . ' as description')
 			->where('products.category_id', $cat_id)
 			->where('products.size_id', $size_id)
 			->where('products.material_id', $material_id)
